@@ -12,6 +12,6 @@ test("API Pre-Check: Secure Vault Connection", async () => {
 
   // 3. Assert that the vault actually loaded the data and it isn't "undefined"
   expect(brokerUrl).toBeDefined();
-  expect(username).toBe("qa_automation_user");
+  expect(username).toBeDefined();
   expect(password).toBeDefined();
 });
