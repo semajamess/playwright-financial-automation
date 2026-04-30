@@ -28,4 +28,12 @@ export class TransferFundsPage extends BasePage {
   async goto() {
     await this.navigate("/transfer.htm");
   }
+
+  async selectFromAccount(accountId: string) {
+    await this.page.locator("#fromAccountId").selectOption(accountId);
+  }
+
+  async selectToAccount(accountId: string) {
+    await this.page.locator("#toAccountId").selectOption(accountId);
+  }
 }
