@@ -17,17 +17,17 @@ export class AccountsOverviewPage extends BasePage {
   }
 
   async getAvailableAccountIds(): Promise<string[]> {
-    const accountLinks = this.page.locator("#accountTable a.ng-binding");
+    const accountLinks = this.page.locator("#accountTable a");
     await accountLinks.first().waitFor();
     return await accountLinks.allTextContents();
   }
 
-  async getBalanceForAccount(accountId: string): Promise<number> {
-    const row = this.page.locator("#accountTable tbody tr", {
-      hasText: accountId,
+  async getBalanceForAccount(accountId: string): Promise<string> {
+    const row = this.page.locator("#accountTable tbody tr").filter({
+      has: this.page.getByRole("link", { name: accountId, exact: true }),
     });
-    const balanceText = await row.locator("td").nth(1).innerText();
-    return CurrencyHelper.convertToNumber(balanceText);
+
+    return await row.locator("td").nth(1).innerText();
   }
 
   async verifyTotalBalanceIsVisible() {
