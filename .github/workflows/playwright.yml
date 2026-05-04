@@ -22,7 +22,8 @@ jobs:
         env:
           TEST_USER: ${{ secrets.TEST_USER }}
           TEST_PASS: ${{ secrets.TEST_PASS }}
-          BASE_URL: https://parabank.parasoft.com/parabank
+          BASE_URL: ${{ secrets.BASE_URL }}
+          REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
