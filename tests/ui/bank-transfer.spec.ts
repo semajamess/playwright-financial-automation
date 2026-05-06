@@ -24,9 +24,13 @@ test("Bank Transaction: Execute $50 Transfer and Verify Ledger Math", async ({
   let expectedFromBalance = 0;
   let expectedToBalance = 0;
 
-  await test.step("Authenticate user securely", async () => {
+  await test.step("Authenticate user", async () => {
     await loginPage.goto();
     await loginPage.executeSecureLogin();
+  });
+
+  await test.step("Navigate to Accounts Overview", async () => {
+    await accountsPage.goto();
   });
 
   await test.step("Ensure test data exists and capture initial balances", async () => {
@@ -42,9 +46,8 @@ test("Bank Transaction: Execute $50 Transfer and Verify Ledger Math", async ({
       await expect(
         page.getByRole("heading", { name: /Account Opened/i }),
       ).toBeVisible();
-      await page.getByRole("link", { name: "Accounts Overview" }).click();
+      await accountsPage.goto();
       await page.locator("#accountTable a").nth(1).waitFor();
-
       accountIds = await accountsPage.getAvailableAccountIds();
     }
 
@@ -78,7 +81,7 @@ test("Bank Transaction: Execute $50 Transfer and Verify Ledger Math", async ({
   });
 
   await test.step("Verify Ledger math on both target accounts", async () => {
-    await page.getByRole("link", { name: "Accounts Overview" }).click();
+    await accountsPage.goto();
 
     const finalFromText =
       await accountsPage.getBalanceForAccount(fromAccountId);

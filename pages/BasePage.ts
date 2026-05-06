@@ -9,6 +9,17 @@ export class BasePage {
 
   async navigate(path: string) {
     const baseUrl = process.env.BASE_URL;
-    await this.page.goto(`${baseUrl}${path}`);
+
+    if (baseUrl && baseUrl.trim().length > 0) {
+      const normalizedBase = baseUrl.endsWith("/")
+        ? baseUrl.slice(0, -1)
+        : baseUrl;
+      const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+      await this.page.goto(`${normalizedBase}${normalizedPath}`);
+      return;
+    }
+
+    const relativePath = path.startsWith("/") ? path.slice(1) : path;
+    await this.page.goto(relativePath);
   }
 }

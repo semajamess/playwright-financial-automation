@@ -1,40 +1,72 @@
-# Financial Trading QA Automation
+# Financial Trading & QA Automation Framework
 
-## Overview
+![Playwright](https://img.shields.io/badge/Playwright-Tested-brightgreen?logo=playwright)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)
+![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?logo=github-actions)
 
-A Playwright + TypeScript automation suite covering UI, API, and mocked UI flows against public demo systems. The focus is stable, cross-browser functional coverage with CI-ready reporting, aimed at demonstrating entry-level QA automation skills.
+An end-to-end (E2E) and API automation suite built with **Playwright** and **TypeScript**. This project demonstrates deterministic UI assertions, state-aware test setup, API CRUD validation, and CI-ready reporting across multiple browsers.
 
-## Tech Stack
+## 🏗 Architecture & Tech Stack
 
-- Playwright Test (UI + API)
-- TypeScript
-- GitHub Actions CI
-- HTML reporting with traces on retry
+- **Core Framework:** Playwright (TypeScript)
+- **Design Pattern:** Strict Page Object Model (POM)
+- **Continuous Integration:** GitHub Actions (Headless execution)
+- **Target Applications:** ParaBank (Financial UI) & ReqRes (REST API)
 
-## Quick Start
+## 🧪 Key Testing Strategies Demonstrated
 
-- npm ci
-- npx playwright install
-- npx playwright test
-- npx playwright show-report
+### 1. Deterministic Ledger Assertions
 
-## Environment Variables
+Standard UI tests often trust frontend success messages. This suite captures initial account balances, executes a transfer, and mathematically asserts the exact amount is deducted from the sender and added to the receiver.
 
-- BASE_URL: base URL for the banking UI under test
-- TEST_USER: login username
-- TEST_PASS: login password
-- REQRES_API_KEY: API key for the demo API
+### 2. State-Aware Test Setup
 
-## Test Strategy (Summary)
+Tests are resilient to missing UI state. If a required condition is missing (e.g., only one account exists), the test creates the missing state through the UI and continues.
 
-- Goals: validate critical user flows, core API CRUD behavior, and UI response to mocked data.
-- Scope: login success/error, transfer flow, balance visibility, API create/update/delete, UI mocking.
-- Approach: page objects for UI, direct API requests for service checks, route mocking for deterministic UI.
-- Reliability: cross-browser runs, retries in CI, trace captured on first retry.
-- Test Data: credentials and API keys supplied via environment variables; no secrets in code.
-- Out of Scope: performance, security, and exhaustive edge cases; focus on functional smoke/regression.
+### 3. Network Interception & Mocking
 
-## Reporting & CI
+Demonstrates the ability to intercept network traffic using Playwright's `page.route()`, allowing for the simulation of edge cases, server errors, or specific payload responses without waiting for backend deployments.
 
-- Local: HTML report is generated after runs; traces are available on retry.
-- CI: tests run on every push and pull request; report artifacts are published.
+### 4. API CRUD Validation
+
+Full integration with REST APIs to validate structural integrity, response codes, and data persistence across `POST`, `GET`, `PUT`, and `DELETE` requests.
+
+### 5. Secure Environment Management
+
+Isolation of sensitive test data. Vault credentials and base URLs are managed strictly via `.env` files locally and securely injected via GitHub Secrets during CI pipeline execution.
+
+---
+
+## ⚙️ Continuous Integration (CI)
+
+This project is fully integrated with **GitHub Actions**. Upon every push or pull request to the main branch, the pipeline:
+
+1. Provisions an Ubuntu runner.
+2. Injects secure environment variables via GitHub Secrets.
+3. Installs precise dependency versions.
+4. Executes the test suite in headless mode.
+5. Uploads HTML diagnostic reports as artifacts if failures occur.
+
+## 🚀 Getting Started Locally
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- A `.env` file containing `BASE_URL`, `TEST_USER`, `TEST_PASS`, and `REQRES_API_KEY`
+
+### Installation
+
+```bash
+npm install
+npx playwright install
+```
+
+### Run Tests
+
+npx playwright test
+
+### View Report
+
+npx playwright show-report
+
+> Note: The ledger transfer test runs on Chromium only to avoid cross‑browser data collisions on the shared demo environment.

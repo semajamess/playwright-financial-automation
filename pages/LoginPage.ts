@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
 
 export class LoginPage extends BasePage {
@@ -19,9 +19,17 @@ export class LoginPage extends BasePage {
   }
 
   async executeSecureLogin() {
+    const logoutLink = this.page.getByRole("link", { name: "Log Out" });
+    if (await logoutLink.isVisible()) {
+      return;
+    }
+
+    await this.usernameInput.waitFor({ state: "visible" });
+    await this.passwordInput.waitFor({ state: "visible" });
     await this.usernameInput.fill(process.env.TEST_USER as string);
     await this.passwordInput.fill(process.env.TEST_PASS as string);
     await this.loginButton.click();
+    await expect(logoutLink).toBeVisible();
   }
 
   async executeInvalidLogin(username: string, password: string) {

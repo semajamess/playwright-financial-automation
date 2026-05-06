@@ -22,6 +22,10 @@ export class AccountsOverviewPage extends BasePage {
     return await accountLinks.allTextContents();
   }
 
+  async goto() {
+    await this.navigate("/overview.htm");
+  }
+
   async getBalanceForAccount(accountId: string): Promise<string> {
     const row = this.page.locator("#accountTable tbody tr").filter({
       has: this.page.getByRole("link", { name: accountId, exact: true }),

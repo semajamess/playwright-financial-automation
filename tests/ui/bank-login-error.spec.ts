@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { LoginPage } from "../../pages/LoginPage";
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test("Bank Authentication: Invalid Login Rejection", async ({ page }) => {
   const loginPage = new LoginPage(page);
 
