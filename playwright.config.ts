@@ -8,35 +8,43 @@ dotenv.config();
  */
 export default defineConfig({
   testDir: "./tests",
-  /* Run tests in files in parallel */
+
+  // Run tests in parallel
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+
+  // Fail the build on CI if test.only is left in code
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
+
+  // Retry failed tests only in CI
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+
+  // Use 2 workers in CI for better speed
+  workers: process.env.CI ? 2 : undefined,
+
+  // HTML report
   reporter: "html",
 
-  /* Shared settings for all the projects below. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/login.htm')`. */
+    // Base URL
     baseURL: process.env.BASE_URL || "https://parabank.parasoft.com/parabank",
 
-    /* Collect trace when retrying the failed test. */
+    // Recommended trace setting for CI
     trace: "on-first-retry",
+
+    // Optional but recommended
+    screenshot: "only-on-failure",
+    video: "off",
+    headless: true,
   },
 
-  /* Configure projects for major browsers */
   projects: [
-    // 1. The Global Setup Project
+    // Global auth setup
     {
       name: "setup",
       testMatch: "tests/ui/auth.setup.ts",
     },
 
-    // 2. Browser Projects (Dependent on Setup, Injecting Cookies)
+    // Chromium
     {
       name: "chromium",
       use: {
@@ -46,6 +54,7 @@ export default defineConfig({
       dependencies: ["setup"],
     },
 
+    // Firefox
     {
       name: "firefox",
       use: {
@@ -55,6 +64,7 @@ export default defineConfig({
       dependencies: ["setup"],
     },
 
+    // WebKit
     {
       name: "webkit",
       use: {
